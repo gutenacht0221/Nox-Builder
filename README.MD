@@ -7,6 +7,7 @@
 - Entirely **Un-Nukable**
 - Extreme Customizability
 - 1 Class / Minimal File Size
+- Networth API (thanks to BreadCat 😽)
 - An Express.js Backend Which Includes:
     - Validation With Mojang Session Servers
     - Ensures All JSON Fields Are Present
